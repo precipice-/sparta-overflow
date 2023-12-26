@@ -14,42 +14,99 @@ model Users {
   userId    Int      @id @default(autoincrement()) @map("userId")
   email     String   @unique @map("email")
   password  String   @map("password")
+  name      String   @map("name")
+  userType  String   @default("STUDENT") @map("userType") // STUDENT || MANAGER
   createdAt DateTime @default(now()) @map("createdAt")
   updatedAt DateTime @updatedAt @map("updatedAt")
 
-  Posts    Posts[] // 사용자(Users) 테이블과 게시글(Posts) 테이블이 1:N 관계를 맺습니다.
-  Comments Comments[] // 사용자(Users) 테이블과 댓글(Comments) 테이블이 1:N 관계를 맺습니다.
+  Questions Questions[] // 사용자(Users) 테이블과 질문(Questions) 테이블이 1:N 관계를 맺습니다.
+  Comments  Comments[] // 사용자(Users) 테이블과 댓글(Comments) 테이블이 1:N 관계를 맺습니다.
+  Answers   Answers[] // 사용자(Users) 테이블과 답변(Answers) 테이블이 1:N 관계를 맺습니다.
+  Likes     Likes[] // 사용자(Users) 테이블과 좋아요(Likes) 테이블이 1:N 관계를 맺습니다.
 
   @@map("Users")
 }
 
-model Posts {
-  postId    Int      @id @default(autoincrement()) @map("postId")
+model Questions {
+  questionId Int      @id @default(autoincrement()) @map("questionId")
+  UserId     Int      @map("UserId") // 사용자(Users) 테이블을 참조하는 외래키
+  title      String   @map("title")
+  content    String   @map("content") @db.Text
+  createdAt  DateTime @default(now()) @map("createdAt")
+  updatedAt  DateTime @updatedAt @map("updatedAt")
+
+  // Users 테이블과 관계를 설정합니다.
+  User            Users              @relation(fields: [UserId], references: [userId], onDelete: Cascade)
+  PostTagsMapping PostTagsMappings[] // 질문(Questions) 테이블과 PostTagsMapping 테이블이 1:N 관계를 맺습니다.
+  Answer          Answers[] // 질문(Questions) 테이블과 Answers 테이블이 1:N 관계를 맺습니다.
+
+  @@map("Posts")
+}
+
+model Answers {
+  answerId   Int      @id @default(autoincrement()) @map("answerId")
+  QuestionId Int      @map("QuestionId") // 질문(Questions) 테이블을 참조하는 외래키
+  UserId     Int      @map("UserId") // 사용자(Users) 테이블을 참조하는 외래키
+  content    String   @map("content") @db.Text
+  chosen     Boolean  @default(false) @map("chosen")
+  createdAt  DateTime @default(now()) @map("createdAt")
+  updatedAt  DateTime @updatedAt @map("updatedAt")
+
+  Comments Comments[] // 질문(Questions) 테이블과 댓글(Comments) 테이블이 1:N 관계를 맺습니다.
+  // Users 테이블과 관계를 설정합니다.
+  User     Users      @relation(fields: [UserId], references: [userId], onDelete: Cascade)
+  // Questions 테이블과 관계를 설정합니다.
+  Question Questions  @relation(fields: [QuestionId], references: [questionId], onDelete: Cascade)
+
+  @@map("Answers")
+}
+
+model Comments {
+  commentId Int      @id @default(autoincrement()) @map("commentId")
+  AnswerId  Int      @map("AnswerId") // 질문(Questions) 테이블을 참조하는 외래키
   UserId    Int      @map("UserId") // 사용자(Users) 테이블을 참조하는 외래키
-  title     String   @map("title")
   content   String   @map("content") @db.Text
   createdAt DateTime @default(now()) @map("createdAt")
   updatedAt DateTime @updatedAt @map("updatedAt")
 
   // Users 테이블과 관계를 설정합니다.
-  User     Users      @relation(fields: [UserId], references: [userId], onDelete: Cascade)
-  Comments Comments[] // 사용자(Users) 테이블과 댓글(Comments) 테이블이 1:N 관계를 맺습니다.
-
-  @@map("Posts")
-}
-
-model Comments {
-  commentId Int      @id @default(autoincrement()) @map("commentId")
-  PostId    Int      @map("PostId") // 게시글(Posts) 테이블을 참조하는 외래키
-  UserId    Int      @map("UserId") // 사용자(Users) 테이블을 참조하는 외래키
-  content   String   @map("content")
-  createdAt DateTime @default(now()) @map("createdAt")
-  updatedAt DateTime @updatedAt @map("updatedAt")
-
-  // Posts 테이블과 관계를 설정합니다.
-  Post Posts @relation(fields: [PostId], references: [postId], onDelete: Cascade)
-  // Users 테이블과 관계를 설정합니다.
-  User Users @relation(fields: [UserId], references: [userId], onDelete: Cascade)
+  User   Users   @relation(fields: [UserId], references: [userId], onDelete: Cascade)
+  // Answers 테이블과 관계를 설정합니다.
+  Answer Answers @relation(fields: [AnswerId], references: [answerId])
 
   @@map("Comments")
+}
+
+model PostTagsMappings {
+  mappingId  Int @id @default(autoincrement()) @map("mappingId")
+  QuestionId Int @map("QuestionId") // 질문(Questions) 테이블을 참조하는 외래키
+  TagId      Int @map("TagId") // 태그(Tags) 테이블을 참조하는 외래키
+
+  // Questions 테이블과 관계를 설정합니다.
+  Question Questions @relation(fields: [QuestionId], references: [questionId], onDelete: Cascade)
+  // Tags 테이블과 관계를 설정합니다.
+  Tag      Tags      @relation(fields: [TagId], references: [tagId], onDelete: Cascade)
+
+  @@map("Post_tags_mapping")
+}
+
+model Tags {
+  tagId   Int    @id @default(autoincrement()) @map("tagId")
+  content String @map("content")
+
+  PostTagsMappings PostTagsMappings[] // 태그(Tags)테이블과 PostTagsMapping 테이블이 1:N 관계를 맺습니다.
+
+  @@map("Tags")
+}
+
+model Likes {
+  likeId Int    @id @default(autoincrement()) @map("tagId")
+  UserId Int    @map("UserId")
+  type   String @map("Type")
+  PostId Int    @map("PostId")
+
+  // Users 테이블과 관계를 설정합니다.
+  User Users @relation(fields: [UserId], references: [userId])
+
+  @@map("Like")
 }
