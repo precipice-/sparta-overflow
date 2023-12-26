@@ -27,13 +27,13 @@ export class UsersRepository {
   };
 
   promoteOne = async (email) => {
-    const user = await prisma.Users.findUnique({ where: { email } });
-
     const updateUser = await prisma.Users.update({
       where: { email },
       data: {
         userType: 'MANAGER',
       },
     });
+
+    return updateUser;
   };
 }
