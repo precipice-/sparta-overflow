@@ -1,5 +1,5 @@
 @host = http://localhost:3000/api/users
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcwMzY0MTQwNSwiZXhwIjoxNzAzNjg0NjA1fQ.Xiz80_Iho853oXsdzDDisrV9ILW6U-EO23sxDpDso90
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTcwMzY2MDY0OSwiZXhwIjoxNzAzNzAzODQ5fQ.OdvHk_dNq5ol3GydSS3z6YGABOhaM02pV0Tj-CXpTxo
 
 ### 권한 승급
 PUT {{host}}/promote

@@ -14,7 +14,6 @@ export class UsersController {
         return res.status(403).json({
           success: false,
           message: '승급 권한이 없습니다.',
-          data,
         });
       }
 

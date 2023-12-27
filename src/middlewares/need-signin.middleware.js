@@ -33,7 +33,6 @@ export const needSignin = async (req, res, next) => {
 
     const decodedPayload = jwt.verify(accessToken, JWT_ACCESS_TOKEN_SECRET);
     const { userId } = decodedPayload;
-    console.log(decodedPayload);
     // 일치 하는 userId가 없는 경우
     const user = await usersRepository.readOneById(userId);
 
