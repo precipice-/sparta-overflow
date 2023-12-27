@@ -1,4 +1,3 @@
-import * as HttpStatus from '../errors/http-status.error.js';
 import { UsersRepository } from '../repositories/users.repository.js';
 
 export class UsersService {
