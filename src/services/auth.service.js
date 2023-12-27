@@ -30,6 +30,7 @@ export class AuthService {
 
   signin = async ({ email, password }) => {
     const user = await this.usersRepository.readOneByEmail(email);
+    console.log(user);
     const hashedPassword = user?.password ?? '';
     const isPasswordMatched = bcrypt.compareSync(password, hashedPassword);
 
@@ -39,9 +40,13 @@ export class AuthService {
       throw new HttpStatus.Unauthorized('일치하는 인증 정보가 없습니다.');
     }
 
-    const accessToken = jwt.sign({ userId: user.id }, JWT_ACCESS_TOKEN_SECRET, {
-      expiresIn: JWT_ACCESS_TOKEN_EXPIRES_IN,
-    });
+    const accessToken = jwt.sign(
+      { userId: user.userId },
+      JWT_ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: JWT_ACCESS_TOKEN_EXPIRES_IN,
+      },
+    );
 
     return accessToken;
   };

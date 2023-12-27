@@ -14,8 +14,8 @@ export class UsersRepository {
     return newUser;
   };
 
-  readOneById = async (id) => {
-    const user = await prisma.users.findUnique({ where: { id } });
+  readOneById = async (userId) => {
+    const user = await prisma.users.findUnique({ where: { userId } });
 
     return user;
   };

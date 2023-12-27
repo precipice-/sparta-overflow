@@ -1,11 +1,11 @@
 @host = http://localhost:3000/api/users
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTY5OTg3MjMxOSwiZXhwIjoxNjk5OTE1NTE5fQ.YwbcoCvUWWgfkLmVL8mIm1MkiZxPaV_rZ-krRv5g9Js
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcwMzY0MTQwNSwiZXhwIjoxNzAzNjg0NjA1fQ.Xiz80_Iho853oXsdzDDisrV9ILW6U-EO23sxDpDso90
 
 ### 권한 승급
-GET {{host}}/promote
+PUT {{host}}/promote
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-   "email": "example@example.com"
+   "targetEmail": "example2@example.com"
 }
